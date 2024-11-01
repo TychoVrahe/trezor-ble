@@ -4,5 +4,4 @@
 # SPDX-License-Identifier: Apache-2.0
 
 config BOARD_T3W1_NRF52833
-	bool "T3W1 NRF52833"
-	depends on SOC_NRF52833_QIAA
+	select SOC_NRF52833_QIAA

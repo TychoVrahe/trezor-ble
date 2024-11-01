@@ -13,7 +13,7 @@ manifest:
     - name: nrf
       remote: ncs
       repo-path: sdk-nrf
-      revision: v2.6.2
+      revision: v2.7.0
       import: true
     - name: mcuboot
       url: https://github.com/hiviah/mcuboot
