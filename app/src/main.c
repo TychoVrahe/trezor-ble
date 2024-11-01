@@ -48,6 +48,7 @@ LOG_MODULE_REGISTER(LOG_MODULE_NAME);
 #define RUN_LED_BLINK_INTERVAL 1000
 
 #define FW_RUNNING_SIG DK_LED3
+#define CON_STATUS_LED DK_LED2
 
 
 static K_SEM_DEFINE(ble_init_ok, 0, 1);
@@ -251,14 +252,31 @@ void ble_write_thread(void)
 
 void led_thread(void)
 {
-  int blink_status = 0;
-  /* Don't go any further until BLE is initialized */
-  k_sem_take(&led_init_ok, K_FOREVER);
+	bool connected = false;
+	int blink_status = 0;
+	/* Don't go any further until BLE is initialized */
+	k_sem_take(&led_init_ok, K_FOREVER);
 
-  for (;;) {
-		dk_set_led(RUN_STATUS_LED, (++blink_status) % 2);
+	for (;;) {
+		blink_status++;
+		dk_set_led(RUN_STATUS_LED, (blink_status) % 2);
+
+		connected = is_connected();
+
+		if (connected) {
+			dk_set_led_on(CON_STATUS_LED);
+		} else {
+
+			if (is_advertising() && !is_advertising_whitelist()) {
+				dk_set_led(CON_STATUS_LED, (blink_status) % 2);
+			} else {
+				dk_set_led_off(CON_STATUS_LED);
+			}
+		}
+
+
 		k_sleep(K_MSEC(RUN_LED_BLINK_INTERVAL));
-  }
+	}
 }
 
 

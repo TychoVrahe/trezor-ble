@@ -25,17 +25,17 @@
 extern "C" {
 #endif
 
-/** @brief UUID of the NUS Service. **/
+ /** @brief UUID of the NUS Service. **/
 #define BT_UUID_NUS_VAL \
-	BT_UUID_128_ENCODE(0x6e400001, 0xb5a3, 0xf393, 0xe0a9, 0xe50e24dcca9e)
+BT_UUID_128_ENCODE(0x8c000001, 0xa59b, 0x4d58, 0xa9ad, 0x073df69fa1b1)
 
-/** @brief UUID of the TX Characteristic. **/
+ /** @brief UUID of the TX Characteristic. **/
 #define BT_UUID_NUS_TX_VAL \
-	BT_UUID_128_ENCODE(0x6e400003, 0xb5a3, 0xf393, 0xe0a9, 0xe50e24dcca9e)
+BT_UUID_128_ENCODE(0x8c000003, 0xa59b, 0x4d58, 0xa9ad, 0x073df69fa1b1)
 
-/** @brief UUID of the RX Characteristic. **/
+ /** @brief UUID of the RX Characteristic. **/
 #define BT_UUID_NUS_RX_VAL \
-	BT_UUID_128_ENCODE(0x6e400002, 0xb5a3, 0xf393, 0xe0a9, 0xe50e24dcca9e)
+BT_UUID_128_ENCODE(0x8c000002, 0xa59b, 0x4d58, 0xa9ad, 0x073df69fa1b1)
 
 #define BT_UUID_NUS_SERVICE   BT_UUID_DECLARE_128(BT_UUID_NUS_VAL)
 #define BT_UUID_NUS_RX        BT_UUID_DECLARE_128(BT_UUID_NUS_RX_VAL)

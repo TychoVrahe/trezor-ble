@@ -16,8 +16,6 @@
 #include "int_comm.h"
 #include "oob.h"
 
-#define CON_STATUS_LED DK_LED2
-
 #define LOG_MODULE_NAME fw_int_connection
 LOG_MODULE_REGISTER(LOG_MODULE_NAME);
 
@@ -47,8 +45,6 @@ void connected(struct bt_conn *conn, uint8_t err)
     LOG_ERR("Phy update request failed: %d",  err);
   }
 
-  dk_set_led_on(CON_STATUS_LED);
-
   send_status_event();
 }
 
@@ -68,7 +64,6 @@ void disconnected(struct bt_conn *conn, uint8_t reason)
   if (current_conn) {
     bt_conn_unref(current_conn);
     current_conn = NULL;
-    dk_set_led_off(CON_STATUS_LED);
   }
 
   send_status_event();
