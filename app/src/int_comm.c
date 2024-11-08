@@ -76,6 +76,16 @@ void send_success_event(void) {
   send_packet(INTERNAL_EVENT, tx_data, sizeof(tx_data));
 }
 
+
+void send_pairing_cancelled_event(void){
+  uint8_t tx_data[1] = {0};
+
+  tx_data[0] = INTERNAL_EVENT_PAIRING_CANCELLED;
+
+  send_packet(INTERNAL_EVENT, tx_data, sizeof(tx_data));
+}
+
+
 void send_pairing_request_event(uint8_t * data, uint16_t len){
   uint8_t tx_data[7] = {0};
 

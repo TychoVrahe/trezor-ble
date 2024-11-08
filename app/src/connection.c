@@ -139,6 +139,11 @@ void auth_cancel(struct bt_conn *conn)
 
   bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
 
+  disconnect();
+
+  send_pairing_cancelled_event();
+  send_status_event();
+
   LOG_INF("Pairing cancelled: %s", addr);
 }
 
