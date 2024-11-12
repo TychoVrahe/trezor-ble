@@ -3,13 +3,13 @@
 #include <zephyr/kernel.h>
 
 #include <zephyr/bluetooth/bluetooth.h>
-#include <bluetooth/services/nus.h>
 
 #include <zephyr/logging/log.h>
 
 #include "int_comm.h"
 #include "connection.h"
 #include "oob.h"
+#include "trz_nus.h"
 
 
 #define LOG_MODULE_NAME fw_int_advertising
@@ -24,15 +24,18 @@ bool advertising_wl = false;
 int bond_cnt = 0;
 int bond_cnt_tmp = 0;
 
-static const struct bt_data ad[] = {
-        BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR)),
-        BT_DATA(BT_DATA_NAME_COMPLETE, DEVICE_NAME, DEVICE_NAME_LEN),
+uint8_t pairing_data[2] = {0};
+
+static const struct bt_data advertising_data[] = {
+  BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR)),
+  BT_DATA(BT_DATA_NAME_COMPLETE, DEVICE_NAME, DEVICE_NAME_LEN),
+  BT_DATA(BT_DATA_MANUFACTURER_DATA, pairing_data, 2),
 };
 
-static const struct bt_data sd[] = {
-        BT_DATA_BYTES(BT_DATA_UUID128_ALL, BT_UUID_NUS_VAL),
-};
 
+static const struct bt_data scan_response_data[] = {
+  BT_DATA_BYTES(BT_DATA_UUID128_ALL, BT_UUID_NUS_VAL),
+};
 
 static void add_to_whitelist(const struct bt_bond_info *info, void *user_data){
   char addr[BT_ADDR_LE_STR_LEN];
@@ -72,22 +75,30 @@ void advertising_start(bool wl){
 
   int err;
 
+  pairing_data[1] = 0x00; // todo color
+
   if (wl) {
     advertising_setup_wl();
     LOG_INF("Advertising with whitelist");
+
+    pairing_data[0] = 0x00;
+
     err = bt_le_adv_start(
-            BT_LE_ADV_PARAM(BT_LE_ADV_OPT_CONNECTABLE | BT_LE_ADV_OPT_FILTER_CONN | BT_LE_ADV_OPT_FILTER_SCAN_REQ,
+            BT_LE_ADV_PARAM(BT_LE_ADV_OPT_CONNECTABLE | BT_LE_ADV_OPT_SCANNABLE | BT_LE_ADV_OPT_FILTER_CONN | BT_LE_ADV_OPT_FILTER_SCAN_REQ,
                             160, 1600, NULL),
-            ad, ARRAY_SIZE(ad),
-            sd, ARRAY_SIZE(sd));
+            advertising_data, ARRAY_SIZE(advertising_data),
+            scan_response_data, ARRAY_SIZE(scan_response_data));
   }
   else {
     LOG_INF("Advertising no whitelist");
+
+    pairing_data[0] = 0x01;
+
     err = bt_le_adv_start(
-            BT_LE_ADV_PARAM(BT_LE_ADV_OPT_CONNECTABLE,
+            BT_LE_ADV_PARAM(BT_LE_ADV_OPT_CONNECTABLE | BT_LE_ADV_OPT_SCANNABLE,
                             160, 1600, NULL),
-            ad, ARRAY_SIZE(ad),
-            sd, ARRAY_SIZE(sd));
+            advertising_data, ARRAY_SIZE(advertising_data),
+            scan_response_data, ARRAY_SIZE(scan_response_data));
   }
   if (err) {
     LOG_ERR("Advertising failed to start (err %d)", err);

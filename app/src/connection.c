@@ -76,7 +76,9 @@ bool is_connected(void) {
 
 void disconnect(void){
   if (current_conn) {
+    LOG_INF("Remotely disconnected");
     bt_conn_disconnect(current_conn, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
+    bt_conn_unref(current_conn);
   }
 }
 
@@ -88,6 +90,7 @@ void num_comp_reply(bool accept)
   } else {
     bt_conn_auth_cancel(auth_conn);
     LOG_INF("Numeric Reject, conn %p", (void *)auth_conn);
+    bt_conn_disconnect(auth_conn, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
   }
 
   bt_conn_unref(auth_conn);
