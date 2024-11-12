@@ -40,10 +40,10 @@ void connected(struct bt_conn *conn, uint8_t err)
 //
 //  bt_conn_le_param_update(conn, &params);
 
-  err = bt_conn_le_phy_update(current_conn, BT_CONN_LE_PHY_PARAM_2M);
-  if (err) {
-    LOG_ERR("Phy update request failed: %d",  err);
-  }
+  // err = bt_conn_le_phy_update(current_conn, BT_CONN_LE_PHY_PARAM_2M);
+  // if (err) {
+  //   LOG_ERR("Phy update request failed: %d",  err);
+  // }
 
   send_status_event();
 }
@@ -84,17 +84,21 @@ void disconnect(void){
 
 void num_comp_reply(bool accept)
 {
-  if (accept) {
-    bt_conn_auth_passkey_confirm(auth_conn);
-    LOG_INF("Numeric Match, conn %p", (void *)auth_conn);
-  } else {
-    bt_conn_auth_cancel(auth_conn);
-    LOG_INF("Numeric Reject, conn %p", (void *)auth_conn);
-    bt_conn_disconnect(auth_conn, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
-  }
 
-  bt_conn_unref(auth_conn);
-  auth_conn = NULL;
+
+  if (auth_conn != NULL) {
+    if (accept) {
+      bt_conn_auth_passkey_confirm(auth_conn);
+      LOG_INF("Numeric Match, conn %p", (void *)auth_conn);
+    } else {
+      bt_conn_auth_cancel(auth_conn);
+      LOG_INF("Numeric Reject, conn %p", (void *)auth_conn);
+      bt_conn_disconnect(auth_conn, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
+    }
+
+    bt_conn_unref(auth_conn);
+    auth_conn = NULL;
+  }
 }
 
 void passkey_to_str(uint8_t buf[6], unsigned int passkey) {
@@ -125,13 +129,11 @@ void auth_passkey_confirm(struct bt_conn *conn, unsigned int passkey)
 
   bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
 
-//  num_comp_reply(true);
+  uint8_t passkey_str[6];
+  passkey_to_str(passkey_str, passkey);
+  send_pairing_request_event(passkey_str, 6);
 
-   uint8_t passkey_str[6];
-   passkey_to_str(passkey_str, passkey);
-   send_pairing_request_event(passkey_str, 6);
-
-   send_status_event();
+  send_status_event();
 
 }
 
