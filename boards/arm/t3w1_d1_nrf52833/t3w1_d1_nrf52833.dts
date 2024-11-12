@@ -6,12 +6,12 @@
 
 /dts-v1/;
 #include <nordic/nrf52833_qiaa.dtsi>
-#include "t3w1_nrf52833-pinctrl.dtsi"
+#include "t3w1_d1_nrf52833-pinctrl.dtsi"
 #include <zephyr/dt-bindings/input/input-event-codes.h>
 
 / {
-	model = "T3W1 NRF52833";
-	compatible = "nordic,t3w1_nrf52833";
+	model = "T3W1 D1 NRF52833";
+	compatible = "nordic,t3w1_d1_nrf52833";
 
 	chosen {
 		zephyr,console = &uart0;

@@ -52,7 +52,7 @@ west update
 ### Building the Application
 Build the application for the t3w1_nrf52833 board:
 ```sh
-west build ./app -b t3w1_nrf52833
+west build ./app -b t3w1_d1_nrf52833
 ```
 
 
