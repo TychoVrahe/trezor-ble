@@ -8,7 +8,7 @@ common:
   sysbuild: true
   build_only: true
   integration_platforms:
-    - t3w1_d1_nrf52833
+    - t3w1_d1_nrf52833, t3w1_revA_nrf52832
 tests:
   app.default: {}
   app.debug:
