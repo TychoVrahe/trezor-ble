@@ -7,6 +7,7 @@ This repository contains the source code and instructions to build and flash the
 
 - [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
+    - [Install the toolchain](#install-the-toolchain)
     - [Launch the nRF Shell](#launch-the-nrf-shell)
     - [Initialize the Workspace](#initialize-the-workspace)
     - [Update nRF Connect SDK Modules](#update-nrf-connect-sdk-modules)
@@ -26,6 +27,13 @@ Before you begin, ensure you have met the following requirements:
 
 Follow these steps to set up the project on your local machine.
 
+### Install the toolchain
+
+Using nrfutil, install the required toolchain for the nRF Connect SDK:
+```sh
+nrfutil toolchain-manager install --ncs-version v2.6.2
+```
+
 ### Launch the nRF Shell
 
 First, launch the nRF shell using the `nrfutil` toolchain manager:
@@ -37,7 +45,7 @@ nrfutil toolchain-manager launch --shell
 ### Initialize the Workspace
 Initialize your workspace for the Trezor BLE Gateway project:
 ```sh
-west init -m https://github.com/tychovrahe/trzncs --mr main my-workspace
+west init -m https://github.com/tychovrahe/trezor-ble --mr main my-workspace
 ```
 
 ### Update nRF Connect SDK Modules
@@ -50,9 +58,9 @@ west update
 
 
 ### Building the Application
-Build the application for the t3w1_nrf52833 board:
+Build the application for the t3w1_revA_nrf52832 board:
 ```sh
-west build ./app -b t3w1_d1_nrf52833
+west build ./app -b t3w1_revA_nrf52832
 ```
 
 
